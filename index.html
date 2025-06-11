@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteador Pro - Amigo Secreto e Grupos</title>
+    <meta name="description" content="A ferramenta mais completa para sortear nomes para amigo secreto, formar equipes, dividir grupos de trabalho e muito mais. Rápido, fácil e gratuito.">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Analytics 4 (GA4) Snippet -->
+    <!-- Substitua G-XXXXXXXXXX pelo seu ID de Medição real -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <!-- Link para CSS customizado (opcional, para pequenos ajustes) -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased">
+
+    <main class="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
+        
+        <!-- Cabeçalho -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl sm:text-5xl font-bold text-indigo-600 dark:text-indigo-400">Sorteador Pro</h1>
+            <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">Sorteios de amigo secreto e divisão de grupos de forma fácil e rápida.</p>
+        </header>
+
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8 space-y-8">
+
+            <!-- 1. Seção de Entrada de Dados -->
+            <section id="data-input-section">
+                <h2 class="text-2xl font-semibold mb-4">1. Participantes</h2>
+                <label for="participants" class="block mb-2 font-medium text-gray-700 dark:text-gray-300">Insira os nomes, um por linha:</label>
+                <textarea id="participants" rows="8" class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150" placeholder="Ana Silva
+João Costa
+Maria Oliveira
+Carlos Souza"></textarea>
+                
+                <div class="mt-6">
+                    <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Modo de Sorteio:</h3>
+                    <fieldset class="mt-2">
+                        <legend class="sr-only">Escolha o modo de sorteio</legend>
+                        <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
+                            <div class="flex items-center">
+                                <input id="mode-secret-santa" name="draw-mode" type="radio" value="amigo_secreto" checked class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                <label for="mode-secret-santa" class="ml-3 block text-sm font-medium">Amigo Secreto</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="mode-groups" name="draw-mode" type="radio" value="grupos" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                <label for="mode-groups" class="ml-3 block text-sm font-medium">Dividir em Grupos</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div id="group-options" class="mt-4 hidden"> <!-- Oculto por padrão -->
+                    <label for="group-count" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade de grupos:</label>
+                    <input type="number" id="group-count" name="group-count" value="2" min="2" class="mt-1 block w-32 p-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </section>
+
+            <!-- 2. Seção de Configurações Avançadas -->
+            <section id="advanced-settings-section">
+                <h2 class="text-2xl font-semibold mb-4">2. Configurações Avançadas (Opcional)</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Adicione regras para impedir que certas pessoas sorteiem outras ou fiquem no mesmo grupo.</p>
+                <div id="rules-container" class="space-y-3">
+                    <!-- As regras de exclusão serão adicionadas aqui via JS -->
+                </div>
+                <button id="add-rule-btn" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:bg-gray-500 dark:hover:bg-gray-600">
+                    + Adicionar Regra de Exclusão
+                </button>
+            </section>
+
+            <!-- 3. Botão Principal de Ação -->
+            <section id="action-section" class="text-center pt-4">
+                <button id="draw-button" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-lg text-xl shadow-lg transform hover:scale-105 transition-transform duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                    SORTEAR AGORA
+                </button>
+            </section>
+
+        </div>
+
+        <!-- 4. Seção de Resultados (Oculta por padrão) -->
+        <section id="results-section" class="hidden mt-10 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8">
+            <h2 class="text-3xl font-bold text-center mb-6">🎉 Resultado do Sorteio! 🎉</h2>
+            
+            <div id="results-output" class="text-lg space-y-4">
+                <!-- O conteúdo do resultado será injetado aqui pelo JavaScript -->
+            </div>
+
+            <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button id="copy-result-btn" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Copiar Resultado
+                </button>
+                <button id="redo-draw-btn" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2 border border-gray-300 dark:border-gray-500 text-base font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Refazer Sorteio
+                </button>
+            </div>
+        </section>
+
+        <!-- 5. Seção de Histórico -->
+        <section id="history-section" class="mt-10">
+            <h2 class="text-xl font-semibold text-center text-gray-700 dark:text-gray-300 mb-4">Últimos Sorteios</h2>
+            <div id="history-list" class="text-center text-gray-500 dark:text-gray-400 text-sm">
+                <p>Nenhum sorteio no histórico ainda.</p>
+                <!-- O histórico será carregado aqui do localStorage -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-4 mt-8 text-sm text-gray-500 dark:text-gray-400">
+        <p>Projeto Piloto - MVP em Testes</p>
+    </footer>
+
+    <!-- Link para o arquivo JavaScript principal -->
+    <script src="script.js"></script>
+</body>
+</html>
