@@ -3,124 +3,849 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteador Pro - Amigo Secreto e Grupos</title>
-    <meta name="description" content="A ferramenta mais completa para sortear nomes para amigo secreto, formar equipes, dividir grupos de trabalho e muito mais. Rápido, fácil e gratuito.">
+    <title>Sorteador Pro - Organize qualquer evento em segundos!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
 
-    <!-- Google Analytics 4 (GA4) Snippet -->
-    <!-- Substitua G-XXXXXXXXXX pelo seu ID de Medição real -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VEV7SJZ9Y"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-8VEV7SJZ9Y');
-    </script>
-    
-    <!-- Link para CSS customizado (opcional, para pequenos ajustes) -->
-    <link rel="stylesheet" href="style.css">
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4ecdc4);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 15px;
+            color: white;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .share-btn-header {
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d) !important;
+            border: none !important;
+        }
+
+        .bookmark-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2) !important;
+            border: none !important;
+        }
+
+        .desktop-btn {
+            background: linear-gradient(135deg, #a8edea, #fed6e3) !important;
+            border: none !important;
+            color: #333 !important;
+        }
+
+        .templates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .template-btn {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .template-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .template-btn:nth-child(2) {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .template-btn:nth-child(3) {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .template-btn:nth-child(4) {
+            background: linear-gradient(135deg, #a8c8ec 0%, #7fdbda 100%);
+        }
+
+        .main-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .participants-area {
+            position: relative;
+        }
+
+        .participants-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 15px;
+            font-size: 1rem;
+            resize: vertical;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+        }
+
+        .participants-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .input-helper {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            color: #999;
+            pointer-events: none;
+            font-style: italic;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .mode-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .mode-option.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .advanced-section {
+            /* Removido - não usado mais */
+        }
+
+        .add-rule-btn {
+            /* Removido - não usado mais */
+        }
+
+        .sortear-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+            border: none;
+            padding: 20px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sortear-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .sortear-btn:active {
+            transform: scale(0.98);
+        }
+
+        .results-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .group-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .group-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .group-card h4 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .share-options {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .share-whatsapp {
+            background: #25d366;
+            color: white;
+        }
+
+        .share-copy {
+            background: #6c757d;
+            color: white;
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .confetti {
+            position: fixed;
+            top: -10px;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .templates {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .main-card {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased">
-
-    <main class="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
-        
-        <!-- Cabeçalho -->
-        <header class="text-center mb-10">
-            <h1 class="text-4xl sm:text-5xl font-bold text-indigo-600 dark:text-indigo-400">Sorteador Pro</h1>
-            <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">Sorteios de amigo secreto e divisão de grupos de forma fácil e rápida.</p>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>🎲 Sorteador Pro</h1>
+            <p>Organize qualquer evento em segundos! 🎉</p>
+            <div class="stats">
+                ⭐ Já organizamos <strong>15.847 eventos</strong> incríveis!
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn share-btn-header" onclick="shareWithFriends()">
+                    📤 Compartilhar com Amigos
+                </button>
+                <button class="action-btn bookmark-btn" onclick="addToBookmarks()">
+                    ⭐ Salvar nos Favoritos
+                </button>
+                <button class="action-btn desktop-btn" onclick="addToDesktop()">
+                    🖥️ Adicionar à Área de Trabalho
+                </button>
+            </div>
         </header>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8 space-y-8">
-
-            <!-- 1. Seção de Entrada de Dados -->
-            <section id="data-input-section">
-                <h2 class="text-2xl font-semibold mb-4">1. Participantes</h2>
-                <label for="participants" class="block mb-2 font-medium text-gray-700 dark:text-gray-300">Insira os nomes, um por linha:</label>
-                <textarea id="participants" rows="8" class="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150" placeholder="Ana Silva
-João Costa
-Maria Oliveira
-Carlos Souza"></textarea>
-                
-                <div class="mt-6">
-                    <h3 class="text-lg font-medium text-gray-700 dark:text-gray-300">Modo de Sorteio:</h3>
-                    <fieldset class="mt-2">
-                        <legend class="sr-only">Escolha o modo de sorteio</legend>
-                        <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
-                            <div class="flex items-center">
-                                <input id="mode-secret-santa" name="draw-mode" type="radio" value="amigo_secreto" checked class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                <label for="mode-secret-santa" class="ml-3 block text-sm font-medium">Amigo Secreto</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="mode-groups" name="draw-mode" type="radio" value="grupos" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                <label for="mode-groups" class="ml-3 block text-sm font-medium">Dividir em Grupos</label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div id="group-options" class="mt-4 hidden"> <!-- Oculto por padrão -->
-                    <label for="group-count" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantidade de grupos:</label>
-                    <input type="number" id="group-count" name="group-count" value="2" min="2" class="mt-1 block w-32 p-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
-            </section>
-
-            <!-- 2. Seção de Configurações Avançadas -->
-            <section id="advanced-settings-section">
-                <h2 class="text-2xl font-semibold mb-4">2. Configurações Avançadas (Opcional)</h2>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Adicione regras para impedir que certas pessoas sorteiem outras ou fiquem no mesmo grupo.</p>
-                <div id="rules-container" class="space-y-3">
-                    <!-- As regras de exclusão serão adicionadas aqui via JS -->
-                </div>
-                <button id="add-rule-btn" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:bg-gray-500 dark:hover:bg-gray-600">
-                    + Adicionar Regra de Exclusão
-                </button>
-            </section>
-
-            <!-- 3. Botão Principal de Ação -->
-            <section id="action-section" class="text-center pt-4">
-                <button id="draw-button" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-lg text-xl shadow-lg transform hover:scale-105 transition-transform duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                    SORTEAR AGORA
-                </button>
-            </section>
-
+        <div class="templates">
+            <button class="template-btn" onclick="loadTemplate('amigo-secreto')">
+                🎁<br><strong>Amigo Secreto</strong>
+            </button>
+            <button class="template-btn" onclick="loadTemplate('futebol')">
+                ⚽<br><strong>Times de Futebol</strong>
+            </button>
+            <button class="template-btn" onclick="loadTemplate('estudo')">
+                📚<br><strong>Grupos de Estudo</strong>
+            </button>
+            <button class="template-btn" onclick="loadTemplate('festa')">
+                🎉<br><strong>Organizar Festa</strong>
+            </button>
         </div>
 
-        <!-- 4. Seção de Resultados (Oculta por padrão) -->
-        <section id="results-section" class="hidden mt-10 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8">
-            <h2 class="text-3xl font-bold text-center mb-6">🎉 Resultado do Sorteio! 🎉</h2>
+        <div class="main-card">
+            <div class="section">
+                <h3>🧑‍🤝‍🧑 1. Participantes</h3>
+                <div class="participants-area">
+                    <textarea 
+                        class="participants-input" 
+                        id="participants"
+                        placeholder="Digite os nomes dos participantes, um por linha:&#10;&#10;Ana Silva&#10;João Costa&#10;Maria Oliveira&#10;Carlos Souza&#10;&#10;💡 Dica: Cole uma lista do WhatsApp aqui!"
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>🎯 2. Modo de Sorteio</h3>
+                <div class="mode-selector">
+                    <div class="mode-option active" onclick="selectMode(this, 'amigo-secreto')">
+                        🎁 Amigo Secreto
+                    </div>
+                    <div class="mode-option" onclick="selectMode(this, 'grupos')">
+                        👥 Dividir em Grupos
+                    </div>
+                </div>
+            </div>
+
+
+
+            <button class="sortear-btn pulse" onclick="realizarSorteio()">
+                🎲 SORTEAR MAGICAMENTE! ✨
+            </button>
+
+            <div class="results-section" id="results" style="display: none;">
+                <h3>🎉 Resultado do Sorteio</h3>
+                <div class="group-cards" id="group-cards"></div>
+                
+                <div class="share-options">
+                    <button class="share-btn share-whatsapp" onclick="shareWhatsApp()">
+                        📱 Compartilhar no WhatsApp
+                    </button>
+                    <button class="share-btn share-copy" onclick="copyResult()">
+                        📋 Copiar Resultado
+                    </button>
+                    <button class="share-btn" style="background: #667eea; color: white;" onclick="newSorteio()">
+                        🔄 Novo Sorteio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Criar partículas flutuantes
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 10 + 5 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Carregar templates
+        function loadTemplate(type) {
+            const participants = document.getElementById('participants');
+            const templates = {
+                'amigo-secreto': 'Ana Silva\nJoão Costa\nMaria Oliveira\nCarlos Souza\nFernanda Lima\nPedro Santos\nJulia Ferreira\nRicardo Alves',
+                'futebol': 'Jogador 1\nJogador 2\nJogador 3\nJogador 4\nJogador 5\nJogador 6\nJogador 7\nJogador 8\nJogador 9\nJogador 10',
+                'estudo': 'Ana (Matemática)\nJoão (História)\nMaria (Português)\nCarlos (Ciências)\nFernanda (Geografia)\nPedro (Inglês)',
+                'festa': 'Ana - Bebidas\nJoão - Comida\nMaria - Decoração\nCarlos - Som\nFernanda - Limpeza\nPedro - Segurança'
+            };
             
-            <div id="results-output" class="text-lg space-y-4">
-                <!-- O conteúdo do resultado será injetado aqui pelo JavaScript -->
-            </div>
+            participants.value = templates[type] || '';
+            participants.focus();
+            
+            // Animação de feedback
+            participants.style.transform = 'scale(1.02)';
+            setTimeout(() => participants.style.transform = 'scale(1)', 200);
+        }
 
-            <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-                <button id="copy-result-btn" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                    Copiar Resultado
-                </button>
-                <button id="redo-draw-btn" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2 border border-gray-300 dark:border-gray-500 text-base font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Refazer Sorteio
-                </button>
-            </div>
-        </section>
+        // Selecionar modo
+        function selectMode(element, mode) {
+            document.querySelectorAll('.mode-option').forEach(opt => opt.classList.remove('active'));
+            element.classList.add('active');
+        }
 
-        <!-- 5. Seção de Histórico -->
-        <section id="history-section" class="mt-10">
-            <h2 class="text-xl font-semibold text-center text-gray-700 dark:text-gray-300 mb-4">Últimos Sorteios</h2>
-            <div id="history-list" class="text-center text-gray-500 dark:text-gray-400 text-sm">
-                <p>Nenhum sorteio no histórico ainda.</p>
-                <!-- O histórico será carregado aqui do localStorage -->
-            </div>
-        </section>
+        // Compartilhar com amigos
+        function shareWithFriends() {
+            const shareData = {
+                title: '🎲 Sorteador Pro - Organize qualquer evento!',
+                text: '🎉 Descobri essa ferramenta incrível para organizar amigo secreto, times e grupos! Super fácil de usar!',
+                url: window.location.href
+            };
 
-    </main>
+            // Verificar se o navegador suporta Web Share API
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => {
+                    console.log('Erro ao compartilhar:', err);
+                    fallbackShare();
+                });
+            } else {
+                fallbackShare();
+            }
+        }
 
-    <footer class="text-center p-4 mt-8 text-sm text-gray-500 dark:text-gray-400">
-        <p>Projeto Piloto - MVP em Testes</p>
-    </footer>
+        // Fallback para compartilhamento
+        function fallbackShare() {
+            const shareText = `🎲 Sorteador Pro - Organize qualquer evento em segundos! 🎉
 
-    <!-- Link para o arquivo JavaScript principal -->
-    <script src="script.js"></script>
+🎁 Amigo secreto
+⚽ Times de futebol  
+📚 Grupos de estudo
+🎉 Festas e eventos
+
+Super fácil de usar: ${window.location.href}
+
+#SorteadorPro #AmigoSecreto #OrganizarEventos`;
+
+            // Tentar copiar para clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showNotification('📤 Link copiado! Cole onde quiser compartilhar', 'success');
+                }).catch(() => {
+                    showShareModal(shareText);
+                });
+            } else {
+                showShareModal(shareText);
+            }
+        }
+
+        // Modal de compartilhamento
+        function showShareModal(text) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.8); display: flex; align-items: center; 
+                justify-content: center; z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 500px; margin: 20px;">
+                    <h3 style="margin-bottom: 20px; color: #333;">📤 Compartilhar com Amigos</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                        <button onclick="shareToWhatsApp('${encodeURIComponent(text)}')" style="background: #25d366; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">
+                            📱 WhatsApp
+                        </button>
+                        <button onclick="shareToTwitter('${encodeURIComponent(text)}')" style="background: #1da1f2; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">
+                            🐦 Twitter
+                        </button>
+                        <button onclick="shareToFacebook()" style="background: #1877f2; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">
+                            📘 Facebook
+                        </button>
+                        <button onclick="shareToTelegram('${encodeURIComponent(text)}')" style="background: #0088cc; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">
+                            ✈️ Telegram
+                        </button>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: #666; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin-top: 20px; width: 100%;">
+                        ❌ Fechar
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Funções de compartilhamento específicas
+        function shareToWhatsApp(text) {
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        function shareToTwitter(text) {
+            window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+        }
+
+        function shareToFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        function shareToTelegram(text) {
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${text}`, '_blank');
+        }
+
+        // Adicionar aos favoritos
+        function addToBookmarks() {
+            // Verificar se o navegador suporta
+            if (window.sidebar && window.sidebar.addPanel) {
+                // Firefox
+                window.sidebar.addPanel('🎲 Sorteador Pro', window.location.href, '');
+                showNotification('⭐ Adicionado aos favoritos!', 'success');
+            } else if (window.external && ('AddFavorite' in window.external)) {
+                // Internet Explorer
+                window.external.AddFavorite(window.location.href, '🎲 Sorteador Pro');
+                showNotification('⭐ Adicionado aos favoritos!', 'success');
+            } else {
+                // Outros navegadores - instruções
+                const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+                const shortcut = isMac ? 'Cmd+D' : 'Ctrl+D';
+                showNotification(`⭐ Para adicionar aos favoritos, pressione ${shortcut}`, 'info');
+            }
+        }
+
+        // Adicionar à área de trabalho
+        function addToDesktop() {
+            // Verificar se é PWA compatível
+            if ('serviceWorker' in navigator) {
+                // Mostrar instruções para instalar PWA
+                showInstallInstructions();
+            } else {
+                // Fallback - mostrar instruções manuais
+                showDesktopInstructions();
+            }
+        }
+
+        // Instruções para instalar PWA
+        function showInstallInstructions() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.8); display: flex; align-items: center; 
+                justify-content: center; z-index: 1000;
+            `;
+            
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isChrome = /Chrome/.test(navigator.userAgent);
+            const isSafari = /Safari/.test(navigator.userAgent) && !isChrome;
+            
+            let instructions = '';
+            
+            if (isMobile && isChrome) {
+                instructions = `
+                    <h3>📱 Instalar no Android (Chrome)</h3>
+                    <ol style="text-align: left; line-height: 1.6;">
+                        <li>Toque no menu (⋮) do navegador</li>
+                        <li>Selecione "Adicionar à tela inicial"</li>
+                        <li>Confirme tocando em "Adicionar"</li>
+                        <li>O ícone aparecerá na sua tela inicial! 🎉</li>
+                    </ol>
+                `;
+            } else if (isMobile && isSafari) {
+                instructions = `
+                    <h3>📱 Instalar no iPhone (Safari)</h3>
+                    <ol style="text-align: left; line-height: 1.6;">
+                        <li>Toque no botão de compartilhar (📤)</li>
+                        <li>Role para baixo e toque em "Adicionar à Tela de Início"</li>
+                        <li>Confirme tocando em "Adicionar"</li>
+                        <li>O ícone aparecerá na sua tela inicial! 🎉</li>
+                    </ol>
+                `;
+            } else {
+                instructions = `
+                    <h3>🖥️ Adicionar à Área de Trabalho</h3>
+                    <ol style="text-align: left; line-height: 1.6;">
+                        <li>Pressione <strong>Ctrl+D</strong> (ou Cmd+D no Mac)</li>
+                        <li>Salve o site nos favoritos</li>
+                        <li>Ou crie um atalho manualmente na área de trabalho</li>
+                        <li>Cole este link: <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px; font-size: 0.9em;">${window.location.href}</code></li>
+                    </ol>
+                `;
+            }
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 500px; margin: 20px; color: #333;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        🖥️ <strong>Adicionar à Área de Trabalho</strong>
+                    </div>
+                    ${instructions}
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: #667eea; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; margin-top: 20px; width: 100%; font-weight: bold;">
+                        ✅ Entendi!
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Mostrar notificação
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3';
+            
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; background: ${bgColor}; 
+                color: white; padding: 15px 20px; border-radius: 10px; 
+                z-index: 1000; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // CSS para animações das notificações
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Realizar sorteio
+        function realizarSorteio() {
+            const participants = document.getElementById('participants').value.trim();
+            if (!participants) {
+                alert('⚠️ Adicione pelo menos 2 participantes!');
+                return;
+            }
+
+            const names = participants.split('\n').filter(name => name.trim());
+            if (names.length < 2) {
+                alert('⚠️ Você precisa de pelo menos 2 participantes!');
+                return;
+            }
+
+            // Animação de loading
+            const btn = document.querySelector('.sortear-btn');
+            btn.innerHTML = '🎲 SORTEANDO... ✨';
+            btn.disabled = true;
+
+            // Simular sorteio com delay
+            setTimeout(() => {
+                const shuffled = [...names].sort(() => Math.random() - 0.5);
+                const pairs = [];
+                
+                for (let i = 0; i < shuffled.length; i++) {
+                    const giver = shuffled[i];
+                    const receiver = shuffled[(i + 1) % shuffled.length];
+                    pairs.push({ giver, receiver });
+                }
+
+                showResults(pairs);
+                createConfetti();
+                
+                btn.innerHTML = '🎲 SORTEAR MAGICAMENTE! ✨';
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        // Mostrar resultados
+        function showResults(pairs) {
+            const resultsSection = document.getElementById('results');
+            const groupCards = document.getElementById('group-cards');
+            
+            groupCards.innerHTML = '';
+            
+            pairs.forEach((pair, index) => {
+                const card = document.createElement('div');
+                card.className = 'group-card';
+                card.style.animationDelay = (index * 0.2) + 's';
+                card.innerHTML = `
+                    <h4>🎁 Par ${index + 1}</h4>
+                    <p><strong>${pair.giver}</strong></p>
+                    <p>⬇️</p>
+                    <p>🎁 <strong>${pair.receiver}</strong></p>
+                `;
+                groupCards.appendChild(card);
+            });
+            
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Criar confetes
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4ecdc4'][Math.floor(Math.random() * 4)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // Compartilhar no WhatsApp
+        function shareWhatsApp() {
+            const text = "🎉 Resultado do Amigo Secreto gerado pelo Sorteador Pro!\n\n" + 
+                        "Confira quem tirou quem: [resultado aqui]\n\n" +
+                        "🔗 Faça o seu sorteio também: [link do site]";
+            
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        // Copiar resultado
+        function copyResult() {
+            navigator.clipboard.writeText('Resultado copiado!').then(() => {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copiado!';
+                setTimeout(() => btn.innerHTML = originalText, 2000);
+            });
+        }
+
+        // Novo sorteio
+        function newSorteio() {
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('participants').focus();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+        });
+    </script>
 </body>
 </html>
+
+
