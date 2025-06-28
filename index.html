@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorteador Pro - Organize qualquer evento em segundos!</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VEV7SJZ9Y"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-8VEV7SJZ9Y');
+    </script>
     <style>
         * {
             margin: 0;
@@ -487,6 +495,25 @@
             }
         }
 
+        
+        /* Dispara um evento customizado para o Google Analytics 4.
+         * @param {string} mode - O modo de sorteio.
+         * @param {number} participantCount - O número de participantes.
+         */
+        function trackGAEvent(mode, participantCount) {
+            // Verifica se a função gtag existe para evitar erros
+            if (typeof gtag === 'function') {
+                gtag('event', 'evento_sorteio_realizado', {
+                    'modo_sorteio': mode,
+                    'numero_participantes': participantCount
+                });
+                console.log(`GA Event Sent: evento_sorteio_realizado (modo: ${mode}, participantes: ${participantCount})`);
+            } else {
+                console.log('GA (gtag) não encontrado. Evento não enviado.');
+            }
+        }
+
+
         // Carregar templates
         function loadTemplate(type) {
             const participants = document.getElementById('participants');
@@ -735,7 +762,9 @@ Super fácil de usar: ${window.location.href}
         `;
         document.head.appendChild(style);
 
-        // Realizar sorteio
+        // ... dentro da tag <script> no final do index.html
+
+        // SUBSTITUA A FUNÇÃO ANTIGA POR ESTA
         function realizarSorteio() {
             const participants = document.getElementById('participants').value.trim();
             if (!participants) {
@@ -749,12 +778,15 @@ Super fácil de usar: ${window.location.href}
                 return;
             }
 
+            // ADICIONADO: Capturar o modo de sorteio selecionado
+            const activeModeElement = document.querySelector('.mode-option.active');
+            const drawMode = activeModeElement ? activeModeElement.getAttribute('onclick').match(/'([^']+)'/)[1] : 'amigo-secreto';
+
             // Animação de loading
             const btn = document.querySelector('.sortear-btn');
             btn.innerHTML = '🎲 SORTEANDO... ✨';
             btn.disabled = true;
 
-            // Simular sorteio com delay
             setTimeout(() => {
                 const shuffled = [...names].sort(() => Math.random() - 0.5);
                 const pairs = [];
@@ -765,6 +797,9 @@ Super fácil de usar: ${window.location.href}
                     pairs.push({ giver, receiver });
                 }
 
+                // ADICIONADO: Chamar a função do Google Analytics
+                trackGAEvent(drawMode, names.length);
+
                 showResults(pairs);
                 createConfetti();
                 
@@ -772,7 +807,6 @@ Super fácil de usar: ${window.location.href}
                 btn.disabled = false;
             }, 2000);
         }
-
         // Mostrar resultados
         function showResults(pairs) {
             const resultsSection = document.getElementById('results');
